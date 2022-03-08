@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Asset Transfer - Events</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css"
+      integrity="sha512-6qkvBbDyl5TDJtNJiC8foyEVuB6gxMBkrKy67XpqnIDxyvLLPJzmTjAj1dRJfNdmXWqD10VbJoeN4pOQqDwvRA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <div class="row flex">
+      <div class="col-12 banner flex">Asset Transfer Events</div>
+      <div class="col-3 flex menu active" id="menu-chaincode-events">Chaincode Events</div>
+      <div class="col-3 flex menu" id="menu-block-events-with-private-data">Block Events with Private Data</div>
+    </div>
+    <hr />
+    <!-- CHAINCODE EVENTS -->
+    <div class="contents active" id="contents-chaincode-events">
+      <div class="row">
+        <div class="col-8">
+          <div class="row">
+            <div class="col-md-3 min-height">
+              <div class="flex">
+                <button id="btnCreateAsset">Create Asset</button>
+              </div>
+              <div class="result flex" id="resultCreateAsset"></div>
+            </div>
+            <div class="col-md-3 min-height">
+              <div class="flex">
+                <button id="btnUpdateAsset">Update Asset</button>
+              </div>
+              <div class="result flex" id="resultUpdateAsset"></div>
+            </div>
+            <div class="col-md-3 min-height">
+              <div class="flex">
+                <button id="btnTransferAsset">Transfer Asset</button>
+              </div>
+              <div class="result flex" id="resultTransferAsset"></div>
+            </div>
+            <div class="col-md-3 min-height">
+              <div class="flex">
+                <button id="btnDeleteAsset">Delete Asset</button>
+              </div>
+              <div class="result flex" id="resultDeleteAsset"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="row">
+            <div class="col-12 min-height">
+              <div class="flex">
+                <button id="btnReadAsset">Read Asset</button>
+              </div>
+              <div class="result" id="resultReadAsset"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-12">
+          <div class="title flex">Event</div>
+          <div class="event-wrap">
+            <div class="event">
+              <div class="messages mCustomScrollbar" id="messages-chaincode-events"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- BLOCK EVENTS WITH PRIVATE DATA -->
+    <div class="contents" id="contents-block-events-with-private-data">
+      <div class="row">
+        <div class="col-8">
+          <div class="row">
+            <div class="col-md-3 min-height">
+              <div class="flex">
+                <button id="btnCreateAssetForPrivateData">Create Asset</button>
+              </div>
+              <div class="result flex" id="resultCreateAssetForPrivateData"></div>
+            </div>
+            <div class="col-md-3 min-height">
+              <div class="flex">
+                <button id="btnUpdateAssetForPrivateData">Update Asset</button>
+              </div>
+              <div class="result flex" id="resultUpdateAssetForPrivateData"></div>
+            </div>
+            <div class="col-md-3 min-height">
+              <div class="flex">
+                <button id="btnTransferAssetForPrivateData">Transfer Asset</button>
+              </div>
+              <div class="result flex" id="resultTransferAssetForPrivateData"></div>
+            </div>
+            <div class="col-md-3 min-height">
+              <div class="flex">
+                <button id="btnDeleteAssetForPrivateData">Delete Asset</button>
+              </div>
+              <div class="result flex" id="resultDeleteAssetForPrivateData"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="row">
+            <div class="col-12 min-height">
+              <div class="flex">
+                <button id="btnReadAssetForPrivateData">Read Asset</button>
+              </div>
+              <div class="result" id="resultReadAssetForPrivateData"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-12">
+          <div class="title flex">Event</div>
+          <div class="event-wrap">
+            <div class="event">
+              <div class="messages mCustomScrollbar" id="messages-block-events-with-private-data"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"
+      integrity="sha512-Yk47FuYNtuINE1w+t/KT4BQ7JaycTCcrvlSvdK/jry6Kcxqg5vN7/svVWCxZykVzzJHaxXk5T9jnFemZHSYgnw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      $(function () {
+        $('[id^=menu]')
+          .not('active')
+          .click(function () {
+            $('.menu').removeClass('active');
+            $(this).addClass('active');
+            $('.contents').removeClass('active');
+            $(`#${$(this).attr('id').replace('menu', 'contents')}`).addClass('active');
+            updateScrollbar();
+            updateScrollbarForPrivateData();
+          });
+
+        $('#btnCreateAsset').click(async function () {
+          sendMessage('Create Asset');
+          updateScrollbar();
+          const response = await fetch('/asset', { method: 'POST' });
+          const json = await response.json();
+          $('#resultCreateAsset').text(json.msg);
+        });
+
+        $('#btnUpdateAsset').click(async function () {
+          sendMessage('Update Asset');
+          updateScrollbar();
+          const response = await fetch('/asset', { method: 'PUT' });
+          const json = await response.json();
+          $('#resultUpdateAsset').text(json.msg);
+        });
+
+        $('#btnTransferAsset').click(async function () {
+          sendMessage('Transfer Asset');
+          updateScrollbar();
+          const response = await fetch('/asset/transfer', { method: 'PUT' });
+          const json = await response.json();
+          $('#resultTransferAsset').text(json.msg);
+        });
+
+        $('#btnDeleteAsset').click(async function () {
+          sendMessage('Delete Asset');
+          updateScrollbar();
+          const response = await fetch('/asset', { method: 'DELETE' });
+          const json = await response.json();
+          $('#resultDeleteAsset').text(json.msg);
+        });
+
+        $('#btnReadAsset').click(async function () {
+          const response = await fetch('/asset');
+          const json = await response.json();
+          let msg = '';
+          for (const m of json.msg) {
+            msg += `<div>${m}</div>`;
+          }
+          $('#resultReadAsset').html(msg);
+        });
+
+        $('#btnCreateAssetForPrivateData').click(async function () {
+          sendMessageForPrivateData('Create Asset');
+          updateScrollbarForPrivateData();
+          const response = await fetch('/asset/private', { method: 'POST' });
+          const json = await response.json();
+          $('#resultCreateAssetForPrivateData').text(json.msg);
+        });
+        $('#btnUpdateAssetForPrivateData').click(async function () {
+          sendMessageForPrivateData('Update Asset');
+          updateScrollbarForPrivateData();
+          const response = await fetch('/asset/private', { method: 'PUT' });
+          const json = await response.json();
+          $('#resultUpdateAssetForPrivateData').text(json.msg);
+        });
+        $('#btnTransferAssetForPrivateData').click(async function () {
+          sendMessageForPrivateData('Transfer Asset');
+          updateScrollbarForPrivateData();
+          const response = await fetch('/asset/private', { method: 'PUT' });
+          const json = await response.json();
+          $('#resultTransferAssetForPrivateData').text(json.msg);
+        });
+        $('#btnDeleteAssetForPrivateData').click(async function () {
+          sendMessageForPrivateData('Delete Asset');
+          updateScrollbarForPrivateData();
+          const response = await fetch('/asset/private', { method: 'DELETE' });
+          const json = await response.json();
+          $('#resultDeleteAssetForPrivateData').text(json.msg);
+        });
+        $('#btnReadAssetForPrivateData').click(async function () {
+          const response = await fetch('/asset/private');
+          const json = await response.json();
+          let msg = '';
+          for (const m of json.msg) {
+            msg += `<div>${m}</div>`;
+          }
+          $('#resultReadAssetForPrivateData').html(msg);
+        });
+      });
+    </script>
+    <script>
+      const socket = io();
+
+      socket.on('chaincode-events', function (data) {
+        for (const d of data) {
+          receiveMessage(d);
+        }
+        updateScrollbar();
+      });
+
+      socket.on('block-events-with-private-data', function (data) {
+        for (const d of data) {
+          receiveMessageForPrivateData(d);
+        }
+        updateScrollbarForPrivateData();
+      });
+
+      const messages = $('#messages-chaincode-events');
+      messages.mCustomScrollbar();
+
+      const messagesForPrivateData = $('#messages-block-events-with-private-data');
+      messagesForPrivateData.mCustomScrollbar();
+
+      function updateScrollbar() {
+        messages.mCustomScrollbar('update');
+        messages.mCustomScrollbar('scrollTo', 'bottom', {
+          scrollInertia: 10,
+          timeout: 0
+        });
+      }
+
+      function updateScrollbarForPrivateData() {
+        messagesForPrivateData.mCustomScrollbar('update');
+        messagesForPrivateData.mCustomScrollbar('scrollTo', 'bottom', {
+          scrollInertia: 10,
+          timeout: 0
+        });
+      }
+
+      function sendMessage(msg) {
+        $(`<div class="message system">${msg}</div>`).appendTo($('#mCSB_1_container')).addClass('new');
+      }
+
+      function sendMessageForPrivateData(msg) {
+        $(`<div class="message system">${msg}</div>`).appendTo($('#mCSB_2_container')).addClass('new');
+      }
+
+      function receiveMessage(msg) {
+        $(`<div class="message">${msg}</div>`).appendTo($('#mCSB_1_container')).addClass('new');
+      }
+
+      function receiveMessageForPrivateData(msg) {
+        $(`<div class="message">${msg}</div>`).appendTo($('#mCSB_2_container')).addClass('new');
+      }
+    </script>
+  </body>
+</html>
