@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Asset Transfer - Events</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css"
+      integrity="sha512-6qkvBbDyl5TDJtNJiC8foyEVuB6gxMBkrKy67XpqnIDxyvLLPJzmTjAj1dRJfNdmXWqD10VbJoeN4pOQqDwvRA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <div class="row flex">
+      <div class="col-12 banner flex">Asset Transfer Events</div>
+    </div>
+    <hr />
+    <!-- CHAINCODE EVENTS -->
+    <div class="contents active">
+      <div class="row">
+        <div class="col-8">
+          <div class="row">
+            <div class="col-6 min-height">
+              <div class="flex">
+                <button id="btnCreateAsset">Create Asset</button>
+              </div>
+              <div class="result flex" id="resultCreateAsset"></div>
+            </div>
+            <div class="col-6 min-height">
+              <div class="flex">
+                <input type="text" placeholder="Asset ID" id="txtAssetID" />
+                <button id="btnReadAsset">Read Asset</button>
+              </div>
+              <div class="result flex" id="resultReadAsset"></div>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-4">
+              <div class="title flex">Event(Red)</div>
+              <div class="event-wrap">
+                <div class="event">
+                  <div class="messages mCustomScrollbar" id="containerRed"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="title flex">Event(Green)</div>
+              <div class="event-wrap">
+                <div class="event">
+                  <div class="messages mCustomScrollbar" id="containerGreen"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="title flex">Event(Blue)</div>
+              <div class="event-wrap">
+                <div class="event">
+                  <div class="messages mCustomScrollbar" id="containerBlue"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="row">
+            <div class="col-12">
+              <div class="flex">
+                <button id="btnReadAllAssets">Read All Assets</button>
+              </div>
+              <div class="result" id="resultReadAllAssets"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"
+      integrity="sha512-Yk47FuYNtuINE1w+t/KT4BQ7JaycTCcrvlSvdK/jry6Kcxqg5vN7/svVWCxZykVzzJHaxXk5T9jnFemZHSYgnw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      $(function () {
+        $('#btnCreateAsset').click(async function () {
+          const response = await fetch('/asset', { method: 'POST' });
+          const json = await response.json();
+          $('#resultCreateAsset').text(json.msg);
+        });
+
+        $('#btnReadAsset').click(async function () {
+          const id = $('#txtAssetID').val();
+          const response = await fetch(`/asset/${id}`);
+          const json = await response.json();
+          let result;
+          if (response.ok) result = `<div>ID: ${json.ID} Color: <font color=${json.Color}>${json.Color}</font></div>`;
+          else result = `<div><font color="red">${json.msg}</font></div>`;
+          $('#resultReadAsset').html(result);
+        });
+
+        $('#btnReadAllAssets').click(async function () {
+          const response = await fetch('/asset');
+          const assets = await response.json();
+          let result = '';
+          if (response.ok) {
+            for (const asset of assets) {
+              result += `<div>ID: ${asset.ID} Color: <font color=${asset.Color}>${asset.Color}</font></div>`;
+            }
+          } else result = `<div><font color="red">${json.msg}</font></div>`;
+          $('#resultReadAllAssets').html(result);
+        });
+      });
+    </script>
+    <script>
+      const containerRed = $('#containerRed');
+      containerRed.mCustomScrollbar();
+
+      const containerGreen = $('#containerGreen');
+      containerGreen.mCustomScrollbar();
+
+      const containerBlue = $('#containerBlue');
+      containerBlue.mCustomScrollbar();
+
+      const socket = io();
+
+      socket.on('CreateRedAssetEvent', function (data) {
+        for (const d of data) {
+          receiveMessage(d, 'mCSB_1_container');
+        }
+        updateScrollbar(containerRed);
+      });
+
+      socket.on('CreateGreenAssetEvent', function (data) {
+        for (const d of data) {
+          receiveMessage(d, 'mCSB_2_container');
+        }
+        updateScrollbar(containerGreen);
+      });
+
+      socket.on('CreateBlueAssetEvent', function (data) {
+        for (const d of data) {
+          receiveMessage(d, 'mCSB_3_container');
+        }
+        updateScrollbar(containerBlue);
+      });
+
+      function updateScrollbar(container) {
+        container.mCustomScrollbar('update');
+        container.mCustomScrollbar('scrollTo', 'bottom', {
+          scrollInertia: 10,
+          timeout: 0
+        });
+      }
+
+      function sendMessage(msg, containerID) {
+        $(`<div class="message system">${msg}</div>`)
+          .appendTo($(`#${containerID}`))
+          .addClass('new');
+      }
+
+      function receiveMessage(msg, containerID) {
+        $(`<div class="message">${msg}</div>`)
+          .appendTo($(`#${containerID}`))
+          .addClass('new');
+      }
+    </script>
+  </body>
+</html>

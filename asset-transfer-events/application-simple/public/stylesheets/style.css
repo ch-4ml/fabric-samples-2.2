@@ -1,0 +1,189 @@
+body {
+  padding: 1rem;
+  background: burlywood;
+  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00b7ff;
+}
+
+input {
+  text-align: center;
+  margin-right: 1rem !important;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+}
+
+.banner {
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 2rem;
+}
+
+.menu {
+  font-size: 1.2rem;
+}
+
+.menu:hover {
+  cursor: pointer;
+}
+
+.menu:not(.active):hover {
+  text-shadow: 1px 1px 1px gray;
+}
+
+.menu.active {
+  font-weight: bold;
+}
+
+.contents {
+  display: none;
+}
+
+.contents.active {
+  display: block !important;
+}
+
+.min-height {
+  min-height: 22vh;
+}
+
+.result {
+  text-align: center;
+  margin: 1rem;
+  overflow: hidden;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.event-wrap {
+  margin-top: 1rem;
+  position: relative;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100%;
+  min-height: 44vh;
+  max-height: 44vh;
+  z-index: 2;
+  overflow: hidden;
+  box-shadow: 0 2px 6px 0 rgb(0 0 0 / 72%);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.event {
+  flex: 1 1 auto;
+  color: black;
+  background: rgb(255 255 255 / 78%);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.messages {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 101%;
+  width: 100%;
+}
+
+.messages .message {
+  clear: both;
+  float: left;
+  word-break: break-all;
+  padding: 6px 10px 7px;
+  border-radius: 10px 10px 10px 0;
+  background: rgba(0, 0, 0, 0.3);
+  margin: 8px 0;
+  font-size: 11px;
+  line-height: 1.4;
+  margin-left: 12px;
+  position: relative;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.messages .message.new {
+  transform: scale(0);
+  transform-origin: 0 0;
+  animation: bounce 500ms linear both;
+}
+
+.messages .message::before {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  border-top: 6px solid rgba(0, 0, 0, 0.3);
+  left: 0;
+  border-right: 7px solid transparent;
+}
+
+.messages .message.system {
+  float: right;
+  color: #fff;
+  text-align: right;
+  background: linear-gradient(120deg, #248a52, #257287);
+  border-radius: 10px 10px 0 10px;
+}
+.messages .message.system::before {
+  left: auto;
+  right: 0;
+  border-right: none;
+  border-left: 5px solid transparent;
+  border-top: 4px solid #257287;
+  bottom: -4px;
+}
+
+@keyframes bounce {
+  0% {
+    transform: matrix3d(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  4.7% {
+    transform: matrix3d(0.45, 0, 0, 0, 0, 0.45, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  9.41% {
+    transform: matrix3d(0.883, 0, 0, 0, 0, 0.883, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  14.11% {
+    transform: matrix3d(1.141, 0, 0, 0, 0, 1.141, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  18.72% {
+    transform: matrix3d(1.212, 0, 0, 0, 0, 1.212, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  24.32% {
+    transform: matrix3d(1.151, 0, 0, 0, 0, 1.151, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  29.93% {
+    transform: matrix3d(1.048, 0, 0, 0, 0, 1.048, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  35.54% {
+    transform: matrix3d(0.979, 0, 0, 0, 0, 0.979, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  41.04% {
+    transform: matrix3d(0.961, 0, 0, 0, 0, 0.961, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  52.15% {
+    transform: matrix3d(0.991, 0, 0, 0, 0, 0.991, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  63.26% {
+    transform: matrix3d(1.007, 0, 0, 0, 0, 1.007, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  85.49% {
+    transform: matrix3d(0.999, 0, 0, 0, 0, 0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  100% {
+    transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+}

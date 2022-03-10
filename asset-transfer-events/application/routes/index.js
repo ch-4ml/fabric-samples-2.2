@@ -232,6 +232,11 @@ router.get('/', async (req, res, next) => {
           console.log(`*** transaction event: ${transEvent.transactionId}`);
           messages.push(`*** transaction event: ${transEvent.transactionId}`);
           if (transEvent.privateData) {
+            console.log(`!!!!! transEvent.privateData !!!!!`);
+            console.log(
+              transEvent.privateData.ns_pvt_rwset[0].collection_pvt_rwset[0].rwset.writes[0].value.toString()
+            );
+            console.log(`!!!!! transEvent.privateData !!!!!`);
             for (const namespace of transEvent.privateData.ns_pvt_rwset) {
               console.log(`    - private data: ${namespace.namespace}`);
               messages.push(`- private data: ${namespace.namespace}`);
